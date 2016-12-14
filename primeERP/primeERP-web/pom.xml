@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>com.sismas</groupId>
-            <artifactId>springerp-ejb</artifactId>
+            <artifactId>primeERP-ejb</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
