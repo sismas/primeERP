@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      contracts="#{contract.name}-layout">
+    <h:body>
+        <h:form id="form">
+            <p:panel header="#{msg.client}">
+                <f:facet name="actions">
+                    <p:commandLink actionListener="#{cliente.limpiar}" update="fdialog:detalle" 
+                                   oncomplete="PF('formulario').show();" 
+                                   styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+                        <h:outputText styleClass="ui-icon ui-icon-plus" />
+                    </p:commandLink>
+                </f:facet>
+                <p:dataTable id="datos" value="#{cliente.listaLazy}" var="item" 
+                             paginatorAlwaysVisible="false" reflow="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             lazy="true" paginatorPosition="top" paginator="true" rows="10">
+                    <p:column headerText="#{msg.firstname}">
+                        <h:outputText value="#{item.apellidopaterno}" />
+                    </p:column>
+                    <p:column headerText="#{msg.lastname}">
+                        <h:outputText value="#{item.apellidomaterno}" />
+                    </p:column>
+                    <p:column headerText="#{msg.name}">
+                        <h:outputText value="#{item.nombre}" />
+                    </p:column>
+                    <p:column>
+                        <p:commandButton update=":fdialog:detalle" icon="ui-icon-pencil" oncomplete="PF('formulario').show()" title="#{msg.edit}">
+                            <f:setPropertyActionListener value="#{item}" target="#{cliente.seleccionado}" />
+                            <p:ajax listener="#{cliente.refreshListaUnidad(item)}" />
+                        </p:commandButton>
+                        <p:commandButton oncomplete="PF('eliminar').show()" icon="ui-icon-close" title="#{msg.delete}">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <p:dialog header="#{msg.client}" widgetVar="formulario" modal="true" 
+                  showEffect="fade" hideEffect="fade" resizable="false" 
+                  position="center" appendTo="@(body)">
+            <h:form id="fdialog">
+                <div class="ui-fluid">
+                    <p:tabView id="detalle">
+                        <p:tab title="#{msg.client}">
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+                                <h:outputText value="#{msg.name}: " />  
+                                <p:inputText value="#{cliente.seleccionado.nombre}" size="50" required="true" requiredMessage="Descripción requerida" />  
+                                <h:outputText value="#{msg.firstname}: " /> 
+                                <p:inputText value="#{cliente.seleccionado.apellidopaterno}" size="50" />
+                                <h:outputText value="#{msg.lastname}: " /> 
+                                <p:inputText value="#{cliente.seleccionado.apellidomaterno}" size="50" />  
+                            </p:panelGrid>
+                        </p:tab>
+                        <p:tab title="#{msg.unity}">
+                            <h:panelGrid>
+                                <p:pickList value="#{cliente.listaUnidad}" var="m"
+                                            itemValue="#{m}" itemLabel="#{m.nombre}" responsive="true"
+                                            showSourceFilter="true" showTargetFilter="true" 
+                                            filterMatchMode="contains" converter="entityConverter">
+                                    <f:facet name="sourceCaption">#{msg.available}</f:facet>
+                                    <f:facet name="targetCaption">#{msg.used}</f:facet>
+                                </p:pickList>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+                        <h:outputLabel />
+                        <p:commandButton update=":form:datos" value="#{msg.confirm}" icon="ui-icon-disk" actionListener="#{cliente.insertar}" oncomplete="PF('formulario').hide()" />
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog message="#{msg.confirmation_message}" header="#{msg.confirmation}" severity="alert" widgetVar="eliminar" appendTo="@(body)">
+            <h:form id="fdelete">
+                <p:commandButton value="#{msg.yes}" actionListener="#{cliente.eliminar}" oncomplete="PF('eliminar').hide()" update="form:datos"/>
+                <p:commandButton value="#{msg.no}" onclick="PF('eliminar').hide()" type="button" />
+            </h:form>
+        </p:confirmDialog>
+
+    </h:body>
+</html>

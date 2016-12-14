@@ -1,6 +1,11 @@
 /primeERP/primeERP-ejb/target/
 /primeERP/primeERP-web/target/
 /primeERP/primeERP-ear/target/
+/primeERP/primeERP-web/src/main/webapp/contracts/apollo-layout/
+/primeERP/primeERP-web/src/main/webapp/contracts/icarus-layout/
+/primeERP/primeERP-web/src/main/webapp/contracts/omega-layout/
+/primeERP/primeERP-web/src/main/webapp/contracts/sentinel-layout/
+/primeERP/primeERP-web/src/main/webapp/contracts/ultima-layout/
 primeERP/primeERP-ejb/nb-configuration.xml
 primeERP/primeERP-web/nb-configuration.xml
 primeERP/primeERP-ear/nb-configuration.xml

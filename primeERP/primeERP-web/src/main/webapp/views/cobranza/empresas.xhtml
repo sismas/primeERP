@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      contracts="#{contract.name}-layout">
+    <h:body>
+        <h:form id="form">
+            <p:panel header="#{msg.company}">
+                <f:facet name="actions">
+                    <p:commandLink actionListener="#{empresa.limpiar}" update="fdialog:detalle" 
+                                   oncomplete="PF('formulario').show();" 
+                                   styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+                        <h:outputText styleClass="ui-icon ui-icon-plus" />
+                    </p:commandLink>
+                </f:facet>
+                <p:dataTable id="datos" value="#{empresa.lista}" var="item" 
+                             paginatorAlwaysVisible="false" reflow="true" 
+                             paginatorPosition="top" paginator="true" rows="10">
+                    <p:column headerText="#{msg.name}">
+                        <h:outputText value="#{item.nombre}" />
+                    </p:column>
+                    <p:column headerText="#{msg.description}">
+                        <h:outputText value="#{item.descripcion}" />
+                    </p:column>
+                    <p:column headerText="#{msg.logo}">
+                        <p:graphicImage value="#{empresa.showFile(item.logo)}" cache="false" stream="false" width="75" />
+                    </p:column>
+                    <p:column headerText="#{msg.state}">
+                        <h:outputText value="#{msg.enabled}" rendered="#{item.estado == 'H'}"/>
+                        <h:outputText value="#{msg.disabled}" rendered="#{item.estado == 'I'}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton update=":fdialog:detalle" icon="ui-icon-pencil" oncomplete="PF('formulario').show()" title="#{msg.edit}">
+                            <f:setPropertyActionListener value="#{item}" target="#{empresa.seleccionado}" />
+                            <f:setPropertyActionListener value="#{item.logo}" target="#{empresa.file}" />
+                        </p:commandButton>
+                        <p:commandButton oncomplete="PF('eliminar').show()" icon="ui-icon-close" title="#{msg.delete}">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <p:dialog header="#{msg.company}" widgetVar="formulario" modal="true" 
+                  showEffect="fade" hideEffect="fade" resizable="false" 
+                  position="center" appendTo="@(body)">
+            <h:form id="fdialog">
+                <div class="ui-fluid">
+
+                    <p:tabView id="detalle">
+                        <p:tab title="#{msg.profile}">
+                            <p:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+                                <h:outputText value="#{msg.name}: " />  
+                                <p:inputText value="#{empresa.seleccionado.nombre}" size="50" required="true" requiredMessage="Descripción requerida" />  
+                                <h:outputText value="#{msg.description}: " /> 
+                                <p:inputText value="#{empresa.seleccionado.descripcion}" size="50" />  
+                                <h:outputText value="#{msg.state}: " />  
+                                <p:selectOneMenu value="#{empresa.seleccionado.estado}">
+                                    <f:selectItem itemLabel="#{msg.enabled}" itemValue="H" />
+                                    <f:selectItem itemLabel="#{msg.disabled}" itemValue="I" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                        </p:tab>
+                        <p:tab title="#{msg.logo}">
+                            <h:panelGrid>
+                                <p:fileUpload fileUploadListener="#{empresa.handleFileUpload}" auto="true"
+                                              update="archivo" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                <p:graphicImage id="archivo" value="#{empresa.showFile()}" cache="false" stream="true" />
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-3, ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+                        <h:outputLabel />
+                        <p:commandButton update=":form:datos" value="#{msg.confirm}" icon="ui-icon-disk" actionListener="#{empresa.insertar}" oncomplete="PF('formulario').hide()" /> 
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog message="#{msg.confirmation_message}" header="#{msg.confirmation}" severity="alert" widgetVar="eliminar" appendTo="@(body)">
+            <h:form id="fdelete">
+                <p:commandButton value="#{msg.yes}" actionListener="#{empresa.eliminar}" oncomplete="PF('eliminar').hide()" update="form:datos"/>
+                <p:commandButton value="#{msg.no}" onclick="PF('eliminar').hide()" type="button" />
+            </h:form>
+        </p:confirmDialog>
+
+    </h:body>
+</html>

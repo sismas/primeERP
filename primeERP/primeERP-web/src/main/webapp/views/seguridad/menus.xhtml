@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      contracts="#{contract.name}-layout">
+    <h:body>
+        <h:form id="form">
+            <p:panel header="#{msg.menu}">
+                <f:facet name="actions">
+                    <p:commandLink actionListener="#{menu.limpiar}" update="fdialog:detalle" 
+                                   oncomplete="PF('formulario').show();" 
+                                   styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default">
+                        <h:outputText styleClass="ui-icon ui-icon-plus" />
+                    </p:commandLink>
+                </f:facet>
+                <p:dataTable id="datos" value="#{menu.listaLazy}" var="item" widgetVar="datosTable"
+                             paginatorAlwaysVisible="false" reflow="true" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             lazy="true" paginatorPosition="top" paginator="true" rows="10">
+                    <p:column headerText="#{msg.name}" filterBy="#{item.nombre}">
+                        <h:outputText value="#{item.nombre}" />
+                    </p:column>
+                    <p:column headerText="#{msg.module}" filterBy="#{item.modulo}">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('datosTable').filter()" converter="selectOneMenuConverter">
+                                <f:selectItem itemLabel="Seleccione un valor" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{modulo.lista}" var="m" itemLabel="#{m.nombre}" itemValue="#{m}"  />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{item.modulo.nombre}" />
+                    </p:column>
+                    <p:column headerText="#{msg.address}">
+                        <h:outputText value="#{item.direccion}" />
+                    </p:column>
+                    <p:column headerText="#{msg.description}">
+                        <h:outputText value="#{item.descripcion}" />
+                    </p:column>
+                    <p:column headerText="#{msg.icon}">
+                        <span><i class="#{item.idIcono.prefijo} #{item.idIcono.codigo}" /></span>
+                    </p:column>
+                    <p:column headerText="#{msg.state}" filterBy="#{item.estado}">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('datosTable').filter()">
+                                <f:selectItem itemLabel="Seleccione un valor" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItem itemLabel="#{msg.enabled}" itemValue="H" />
+                                <f:selectItem itemLabel="#{msg.disabled}" itemValue="I"  />
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{msg.enabled}" rendered="#{item.estado == 'H'}"/>
+                        <h:outputText value="#{msg.disabled}" rendered="#{item.estado == 'I'}"/>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton update=":fdialog:detalle" icon="ui-icon-pencil" oncomplete="PF('formulario').show()" title="#{msg.edit}">
+                            <f:setPropertyActionListener value="#{item}" target="#{menu.seleccionado}" />
+                        </p:commandButton>
+                        <p:commandButton oncomplete="PF('eliminar').show()" icon="ui-icon-close" title="#{msg.delete}">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <p:dialog header="#{msg.menu}" widgetVar="formulario" modal="true" 
+                  showEffect="fade" hideEffect="fade" resizable="false" 
+                  position="center" appendTo="@(body)">
+            <h:form id="fdialog">
+                <div class="ui-fluid">
+                    <p:panelGrid id="detalle" columns="2" columnClasses="ui-grid-col-3, ui-grid-col-9" layout="grid" styleClass="ui-panelgrid-blank">
+                        <h:outputText value="#{msg.name}: " />  
+                        <p:inputText value="#{menu.seleccionado.nombre}" size="50" required="true" requiredMessage="Nombre requerido" />  
+                        <h:outputText value="#{msg.address}: " /> 
+                        <p:inputText value="#{menu.seleccionado.direccion}" size="50" />  
+                        <h:outputText value="#{msg.module} : " />  
+                        <p:selectOneMenu value="#{menu.seleccionado.modulo}" converter="selectOneMenuConverter">
+                            <f:selectItems value="#{modulo.lista}" var="m" itemLabel="#{m.nombre}" itemValue="#{m}"/>
+                        </p:selectOneMenu>
+                        <h:outputText value="#{msg.description}: " />
+                        <p:inputText value="#{menu.seleccionado.descripcion}" size="50" />
+                        <h:outputText value="#{msg.icon}: " />
+                        <p:selectOneMenu value="#{menu.seleccionado.idIcono}" converter="selectOneMenuConverter" filter="true" filterMatchMode="contains">
+                            <f:selectItems value="#{icono.lista}" var="i" itemLabel="#{i.codigo}" itemValue="#{i}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="#{msg.state}: " />  
+                        <p:selectOneMenu value="#{menu.seleccionado.estado}">
+                            <f:selectItem itemLabel="#{msg.enabled}" itemValue="H" />
+                            <f:selectItem itemLabel="#{msg.disabled}" itemValue="I" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel />
+                        <p:commandButton update=":form:datos" value="#{msg.confirm}" icon="ui-icon-disk" actionListener="#{menu.insertar}" oncomplete="PF('formulario').hide()" />
+                    </p:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:confirmDialog message="#{msg.confirmation_message}" header="#{msg.confirmation}" severity="alert" widgetVar="eliminar" appendTo="@(body)">
+            <h:form id="fdelete">
+                <p:commandButton value="#{msg.yes}" actionListener="#{menu.eliminar}" oncomplete="PF('eliminar').hide()" update="form:datos"/>
+                <p:commandButton value="#{msg.no}" onclick="PF('eliminar').hide()" type="button" />
+            </h:form>
+        </p:confirmDialog>
+
+    </h:body>
+</html>

@@ -1,0 +1,29 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pp="http://primefaces.org/poseidon"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core">
+    <div class="layout-menu-container">
+        <div class="nano">
+            <div class="nano-content menu-scroll-content">
+                <div class="search-input">
+                </div>
+                <h:form>
+                    <pp:menu>
+                        <c:forEach items="#{modulo.lista}" var="m">
+                            <p:submenu label="#{m.nombre}" icon="">
+                                <c:forEach items="#{principal.getMenuPermitido(m)}" var="o">
+                                    <p:menuitem value="#{o.nombre}" actionListener="#{principal.irAOpcionMenu(o)}" icon="#{o.idIcono.prefijo} fa-fw #{o.idIcono.codigo}" update="contenido" ajax="false"/>  
+                                </c:forEach>
+                            </p:submenu>
+                        </c:forEach>
+                    </pp:menu>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

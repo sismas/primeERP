@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>SpringERP</title>
+        <h:outputStylesheet name="fa/font-awesome.css" library="primefaces" />
+        <h:outputStylesheet name="css/nanoscroller.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/animate.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/layout-turquoise.css" library="poseidon-layout" />
+        <h:outputScript name="js/nanoscroller.js" library="poseidon-layout" />
+        <h:outputScript name="js/layout.js" library="poseidon-layout" />
+        <h:outputScript name="js/swipe.js" library="poseidon-layout" />
+        <script type="text/javascript">
+            if (window.PrimeFaces) {
+                PrimeFaces.settings.locale = 'es_ES';
+            }
+        </script>
+    </h:head>
+    <h:body class="exception-body access-page">
+        <div class="exception-top">
+            <p:graphicImage value="#{resource['poseidon-layout:images/icon-access.png']}" alt="" />
+        </div>
+        <div class="exception-bottom">
+            <div class="exception-wrapper">
+                <span class="exception-summary">Access Denied</span>
+                <span class="exception-detail">You Don't Have Permissions To Access This Resource</span>
+                <p:button icon="fa fa-home" value="Ingresar" outcome="/index.xhtml"/>
+                <p:graphicImage value="#{resource['poseidon-layout:images/logo-icon-white.png']}" alt="" class="logo-icon" />
+            </div>
+        </div>
+    </h:body>
+</html>

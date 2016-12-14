@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>SpringERP</title>
+        <h:outputStylesheet name="fa/font-awesome.css" library="primefaces" />
+        <h:outputStylesheet name="css/nanoscroller.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/animate.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/layout-turquoise.css" library="poseidon-layout" />
+        <h:outputScript name="js/nanoscroller.js" library="poseidon-layout" />
+        <h:outputScript name="js/layout.js" library="poseidon-layout" />
+        <h:outputScript name="js/swipe.js" library="poseidon-layout" />
+        <script type="text/javascript">
+            if (window.PrimeFaces) {
+                PrimeFaces.settings.locale = 'es_ES';
+            }
+        </script>
+    </h:head>
+    <h:body class="main-body">
+        <div class="layout-wrapper menu-layout-static">
+            <ui:include src="topbar.xhtml" />
+            <ui:include src="sidebar.xhtml" />
+            <div class="layout-main">
+                <div class="layout-main-content">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <div id="contenido">
+                                <ui:include src="#{principal.menuContenido}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p:growl id="msg" showDetail="true" autoUpdate="true" />
+
+        <p:ajaxStatus style="position:absolute;width:64px;height:64px;position:fixed;right:10px;bottom:10px">
+            <f:facet name="start">
+                <p:graphicImage value="#{resource['poseidon-layout:images/preloader.gif']}" />
+            </f:facet>
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
+
+    </h:body>
+</html>
